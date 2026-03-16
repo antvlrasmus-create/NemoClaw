@@ -120,6 +120,13 @@ install_or_upgrade_ollama() {
 # 3. NemoClaw
 # ---------------------------------------------------------------------------
 install_nemoclaw() {
+  # Ensure npm global bin is on PATH (nvm installs to a non-standard location)
+  local npm_bin
+  npm_bin="$(npm config get prefix)/bin"
+  if ! echo "$PATH" | tr ':' '\n' | grep -qx "$npm_bin"; then
+    export PATH="$npm_bin:$PATH"
+  fi
+
   if [[ -f "./package.json" ]] && grep -q '"name": "nemoclaw"' ./package.json 2>/dev/null; then
     info "NemoClaw package.json found in current directory — installing from source…"
     npm install && npm link
@@ -127,6 +134,19 @@ install_nemoclaw() {
     info "Installing NemoClaw from npm…"
     npm install -g nemoclaw
   fi
+
+  # Persist npm global bin for future shells
+  local profile="$HOME/.bashrc"
+  [ -f "$HOME/.zshrc" ] && profile="$HOME/.zshrc"
+  if ! grep -q 'npm config get prefix' "$profile" 2>/dev/null; then
+    echo 'export PATH="$(npm config get prefix)/bin:$PATH"' >> "$profile"
+    info "Added npm global bin to $profile"
+  fi
+
+  if ! command_exists nemoclaw; then
+    error "nemoclaw not found in PATH after install. Try: source ~/.bashrc && nemoclaw --help"
+  fi
+  info "nemoclaw is ready: $(nemoclaw --version 2>/dev/null || echo 'installed')"
 }
 
 # ---------------------------------------------------------------------------
