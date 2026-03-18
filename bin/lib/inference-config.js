@@ -18,6 +18,8 @@ function getProviderSelectionConfig(provider, model) {
         model: model || DEFAULT_CLOUD_MODEL,
         profile: DEFAULT_ROUTE_PROFILE,
         credentialEnv: DEFAULT_ROUTE_CREDENTIAL_ENV,
+        provider,
+        providerLabel: "NVIDIA Cloud API",
       };
     case "vllm-local":
       return {
@@ -27,6 +29,8 @@ function getProviderSelectionConfig(provider, model) {
         model: model || "vllm-local",
         profile: DEFAULT_ROUTE_PROFILE,
         credentialEnv: DEFAULT_ROUTE_CREDENTIAL_ENV,
+        provider,
+        providerLabel: "Local vLLM",
       };
     case "ollama-local":
       return {
@@ -36,6 +40,8 @@ function getProviderSelectionConfig(provider, model) {
         model: model || DEFAULT_OLLAMA_MODEL,
         profile: DEFAULT_ROUTE_PROFILE,
         credentialEnv: DEFAULT_ROUTE_CREDENTIAL_ENV,
+        provider,
+        providerLabel: "Local Ollama",
       };
     default:
       return null;

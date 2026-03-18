@@ -106,7 +106,8 @@ function testCommand(command) {
     }
 }
 function showConfig(config, logger) {
-    logger.info(`  Endpoint:    ${config.endpointType} (${config.endpointUrl})`);
+    logger.info(`  Endpoint:    ${(0, config_js_1.describeOnboardEndpoint)(config)}`);
+    logger.info(`  Provider:    ${(0, config_js_1.describeOnboardProvider)(config)}`);
     if (config.ncpPartner) {
         logger.info(`  NCP Partner: ${config.ncpPartner}`);
     }
@@ -187,12 +188,10 @@ async function cliOnboard(opts) {
     else {
         const ollama = detectOllama();
         if (ollama.running && isExperimentalEnabled()) {
-            logger.info("Detected Ollama on localhost:11434. Using it for onboarding.");
-            endpointType = "ollama";
+            logger.info("Detected local inference option: Ollama.");
+            logger.info("Select it explicitly if you want to use it.");
         }
-        else {
-            endpointType = await promptEndpoint(ollama);
-        }
+        endpointType = await promptEndpoint(ollama);
     }
     // Step 2: Endpoint URL resolution
     let endpointUrl;
@@ -290,10 +289,23 @@ async function cliOnboard(opts) {
     // Step 6: Resolve profile
     const profile = resolveProfile(endpointType);
     const providerName = resolveProviderName(endpointType);
+    const summaryConfig = {
+        endpointType,
+        endpointUrl,
+        ncpPartner,
+        model,
+        profile,
+        credentialEnv,
+        provider: providerName,
+        providerLabel: undefined,
+        onboardedAt: "",
+    };
+    summaryConfig.providerLabel = (0, config_js_1.describeOnboardProvider)(summaryConfig);
     // Step 7: Confirmation
     logger.info("");
     logger.info("Configuration summary:");
-    logger.info(`  Endpoint:    ${endpointType} (${endpointUrl})`);
+    logger.info(`  Endpoint:    ${(0, config_js_1.describeOnboardEndpoint)(summaryConfig)}`);
+    logger.info(`  Provider:    ${summaryConfig.providerLabel}`);
     if (ncpPartner) {
         logger.info(`  NCP Partner: ${ncpPartner}`);
     }
@@ -375,13 +387,16 @@ async function cliOnboard(opts) {
         model,
         profile,
         credentialEnv,
+        provider: providerName,
+        providerLabel: summaryConfig.providerLabel,
         onboardedAt: new Date().toISOString(),
     });
     // Step 9: Success
     logger.info("");
     logger.info("Onboarding complete!");
     logger.info("");
-    logger.info(`  Endpoint:   ${endpointUrl}`);
+    logger.info(`  Endpoint:   ${(0, config_js_1.describeOnboardEndpoint)(summaryConfig)}`);
+    logger.info(`  Provider:   ${summaryConfig.providerLabel}`);
     logger.info(`  Model:      ${model}`);
     logger.info(`  Credential: $${credentialEnv}`);
     logger.info("");

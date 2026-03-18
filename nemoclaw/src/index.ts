@@ -14,7 +14,11 @@
 import type { Command } from "commander";
 import { registerCliCommands } from "./cli.js";
 import { handleSlashCommand } from "./commands/slash.js";
-import { loadOnboardConfig } from "./onboard/config.js";
+import {
+  describeOnboardEndpoint,
+  describeOnboardProvider,
+  loadOnboardConfig,
+} from "./onboard/config.js";
 
 // ---------------------------------------------------------------------------
 // OpenClaw Plugin SDK compatible types (mirrors openclaw/plugin-sdk)
@@ -257,7 +261,8 @@ export default function register(api: OpenClawPluginApi): void {
   const providerCredentialEnv = onboardCfg?.credentialEnv ?? "NVIDIA_API_KEY";
   api.registerProvider(registeredProviderForConfig(onboardCfg, providerCredentialEnv));
 
-  const bannerEndpoint = onboardCfg?.endpointType ?? "build.nvidia.com";
+  const bannerEndpoint = onboardCfg ? describeOnboardEndpoint(onboardCfg) : "build.nvidia.com";
+  const bannerProvider = onboardCfg ? describeOnboardProvider(onboardCfg) : "NVIDIA Cloud API";
   const bannerModel = onboardCfg?.model ?? "nvidia/nemotron-3-super-120b-a12b";
 
   api.logger.info("");
@@ -265,6 +270,7 @@ export default function register(api: OpenClawPluginApi): void {
   api.logger.info("  │  NemoClaw registered                                │");
   api.logger.info("  │                                                     │");
   api.logger.info(`  │  Endpoint:  ${bannerEndpoint.padEnd(40)}│`);
+  api.logger.info(`  │  Provider:  ${bannerProvider.padEnd(40)}│`);
   api.logger.info(`  │  Model:     ${bannerModel.padEnd(40)}│`);
   api.logger.info("  │  Commands:  openclaw nemoclaw <command>             │");
   api.logger.info("  └─────────────────────────────────────────────────────┘");

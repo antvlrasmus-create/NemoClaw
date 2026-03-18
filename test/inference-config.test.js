@@ -23,6 +23,8 @@ describe("inference selection config", () => {
       model: DEFAULT_OLLAMA_MODEL,
       profile: DEFAULT_ROUTE_PROFILE,
       credentialEnv: DEFAULT_ROUTE_CREDENTIAL_ENV,
+      provider: "ollama-local",
+      providerLabel: "Local Ollama",
     });
   });
 
@@ -34,6 +36,8 @@ describe("inference selection config", () => {
       model: "nvidia/nemotron-3-super-120b-a12b",
       profile: DEFAULT_ROUTE_PROFILE,
       credentialEnv: DEFAULT_ROUTE_CREDENTIAL_ENV,
+      provider: "nvidia-nim",
+      providerLabel: "NVIDIA Cloud API",
     });
   });
 
