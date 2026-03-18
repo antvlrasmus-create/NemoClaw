@@ -22,17 +22,18 @@ DGX Spark ships **Ubuntu 24.04 + Docker 28.x** but no k8s/k3s. OpenShell embeds 
 
 ### 1. Docker permissions
 
-```
+```text
 Error in the hyper legacy client: client error (Connect)
   Permission denied (os error 13)
 ```
 
 **Cause**: Your user isn't in the `docker` group.
+
 **Fix**: `setup-spark` runs `usermod -aG docker $USER`. You may need to log out and back in (or `newgrp docker`) for it to take effect.
 
 ### 2. cgroup v2 incompatibility
 
-```
+```text
 K8s namespace not ready
 openat2 /sys/fs/cgroup/kubepods/pids.max: no
 Failed to start ContainerManager: failed to initialize top level QOS containers
@@ -47,17 +48,22 @@ Failed to start ContainerManager: failed to initialize top level QOS containers
 These should already be on your Spark:
 
 - **Docker** (pre-installed, v28.x)
+
 - **Node.js 22** — if not installed:
+
   ```bash
   curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
   sudo apt-get install -y nodejs
   ```
+
 - **OpenShell CLI**:
+
   ```bash
   ARCH=$(uname -m)  # aarch64 on Spark
   curl -fsSL "https://github.com/NVIDIA/OpenShell/releases/latest/download/openshell-linux-${ARCH}" -o /usr/local/bin/openshell
   chmod +x /usr/local/bin/openshell
   ```
+
 - **NVIDIA API Key** from [build.nvidia.com](https://build.nvidia.com) — prompted on first run
 
 ## Manual Setup (if setup-spark doesn't work)
@@ -98,7 +104,7 @@ nemoclaw onboard
 ## Known Issues
 
 | Issue | Status | Workaround |
-|-------|--------|------------|
+| :--- | :--- | :--- |
 | cgroup v2 kills k3s in Docker | Fixed in `setup-spark` | `daemon.json` cgroupns=host |
 | Docker permission denied | Fixed in `setup-spark` | `usermod -aG docker` |
 | CoreDNS CrashLoop after setup | Fixed in `fix-coredns.sh` | Uses container gateway IP, not 127.0.0.11 |
@@ -123,7 +129,7 @@ openshell term
 
 ## Architecture Notes
 
-```
+```bash
 DGX Spark (Ubuntu 24.04, cgroup v2)
   └── Docker (28.x, cgroupns=host)
        └── OpenShell gateway container
