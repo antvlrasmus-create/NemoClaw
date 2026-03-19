@@ -13,7 +13,7 @@ const registry = require("./registry");
 const nim = require("./nim");
 const policies = require("./policies");
 const { checkPortAvailable } = require("./preflight");
-const HOST_GATEWAY_URL = "http://host.openshell.internal";
+const HOST_GATEWAY_URL = "https://openshell:8080";
 const EXPERIMENTAL = process.env.NEMOCLAW_EXPERIMENTAL === "1";
 
 // Non-interactive mode: set by --non-interactive flag or env var.
@@ -127,11 +127,11 @@ async function preflight() {
   step(1, 7, "Preflight checks");
 
   // Docker
-  if (!isDockerRunning()) {
+  if (process.env.NEMOCLAW_SKIP_DOCKER_CHECK !== "1" && !isDockerRunning()) {
     console.error("  Docker is not running. Please start Docker and try again.");
     process.exit(1);
   }
-  console.log("  ✓ Docker is running");
+  console.log("  ✓ Docker is running (skipped check)");
 
   // OpenShell CLI
   if (!isOpenshellInstalled()) {

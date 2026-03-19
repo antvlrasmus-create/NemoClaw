@@ -12,6 +12,9 @@ services:
       - .:/app
       - nemoclaw-data:/root/.nemoclaw
       - openshell-data:/root/.openshell
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "openshell:host-gateway"
     working_dir: /app
     command: sleep infinity
     environment:
