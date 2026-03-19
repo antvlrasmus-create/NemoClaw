@@ -8,6 +8,14 @@ const fs = require("fs");
 const os = require("os");
 
 const { ROOT, SCRIPTS, run, runCapture } = require("./lib/runner");
+
+// Load .env
+try {
+  require("dotenv").config({ path: path.join(ROOT, ".env") });
+} catch (err) {
+  // dotenv might not be installed yet, ignore
+}
+
 const {
   ensureApiKey,
   ensureGithubToken,
@@ -167,7 +175,9 @@ function showStatus() {
   }
 
   // Show service status
-  run(`bash "${SCRIPTS}/start-services.sh" --status`);
+  const safeName = defaultSandbox && /^[a-zA-Z0-9._-]+$/.test(defaultSandbox) ? defaultSandbox : null;
+  const sandboxEnv = safeName ? `SANDBOX_NAME="${safeName}"` : "";
+  run(`${sandboxEnv} bash "${SCRIPTS}/start-services.sh" --status`);
 }
 
 function listSandboxes() {

@@ -1,0 +1,148 @@
+
+  NemoClaw Onboarding
+  (non-interactive mode)
+  ===================
+
+  [1/7] Preflight checks
+  ──────────────────────────────────────────────────
+  ✓ Docker is running
+  ✓ openshell CLI: openshell 0.0.10
+  ✓ Port 8080 available (OpenShell gateway)
+  ✓ Port 18789 available (NemoClaw dashboard)
+  ⓘ No GPU detected — will use cloud inference
+
+  [2/7] Starting OpenShell gateway
+  ──────────────────────────────────────────────────
+Deploying local gateway nemoclaw...
+  Checking Docker
+  Downloading gateway
+  Initializing environment
+  Starting gateway
+  I0318 23:24:08.945354     102 pod_startup_latency_tracker.go:108] "Observed pod startup duration" pod="kube-system/helper-pod-create-pvc-450ac567-d435-4249-a367-fe1367890d28" podStartSLOduration=5.62659766 podStartE2EDuration="13.945314926s" podCreationTimestamp="2026-03-18 23:23:55 +0000 UTC" firstStartedPulling="2026-03-18 23:23:59.342438755 +0000 UTC m=+124.673060598" lastFinishedPulling="2026-03-18 23:24:07.661156121 +0000 UTC m=+132.991777864" observedRunningTime="2026-03-18 23:24:08.943380646 +0000 UTC m=+134.274002489" watchObservedRunningTime="2026-03-18 23:24:08.945314926 +0000 UTC m=+134.275936669"
+  I0318 23:24:11.546707     102 reconciler_common.go:163] "operationExecutor.UnmountVolume started for volume \"kubernetes.io/projected/b076a7e1-42f1-4869-9a2c-00e91a5364ab-kube-api-access-gwxpb\" (UniqueName: \"kubernetes.io/projected/b076a7e1-42f1-4869-9a2c-00e91a5364ab-kube-api-access-gwxpb\") pod \"b076a7e1-42f1-4869-9a2c-00e91a5364ab\" (UID: \"b076a7e1-42f1-4869-9a2c-00e91a5364ab\") "
+  I0318 23:24:11.546778     102 reconciler_common.go:163] "operationExecutor.UnmountVolume started for volume \"kubernetes.io/configmap/b076a7e1-42f1-4869-9a2c-00e91a5364ab-script\" (UniqueName: \"kubernetes.io/configmap/b076a7e1-42f1-4869-9a2c-00e91a5364ab-script\") pod \"b076a7e1-42f1-4869-9a2c-00e91a5364ab\" (UID: \"b076a7e1-42f1-4869-9a2c-00e91a5364ab\") "
+  I0318 23:24:11.546801     102 reconciler_common.go:163] "operationExecutor.UnmountVolume started for volume \"kubernetes.io/host-path/b076a7e1-42f1-4869-9a2c-00e91a5364ab-data\" (UniqueName: \"kubernetes.io/host-path/b076a7e1-42f1-4869-9a2c-00e91a5364ab-data\") pod \"b076a7e1-42f1-4869-9a2c-00e91a5364ab\" (UID: \"b076a7e1-42f1-4869-9a2c-00e91a5364ab\") "
+  I0318 23:24:11.546929     102 operation_generator.go:779] UnmountVolume.TearDown succeeded for volume "kubernetes.io/host-path/b076a7e1-42f1-4869-9a2c-00e91a5364ab-data" pod "b076a7e1-42f1-4869-9a2c-00e91a5364ab" (UID: "b076a7e1-42f1-4869-9a2c-00e91a5364ab"). InnerVolumeSpecName "data". PluginName "kubernetes.io/host-path", VolumeGIDValue ""
+  I0318 23:24:11.547399     102 operation_generator.go:779] UnmountVolume.TearDown succeeded for volume "kubernetes.io/configmap/b076a7e1-42f1-4869-9a2c-00e91a5364ab-script" pod "b076a7e1-42f1-4869-9a2c-00e91a5364ab" (UID: "b076a7e1-42f1-4869-9a2c-00e91a5364ab"). InnerVolumeSpecName "script". PluginName "kubernetes.io/configmap", VolumeGIDValue ""
+  I0318 23:24:11.549306     102 operation_generator.go:779] UnmountVolume.TearDown succeeded for volume "kubernetes.io/projected/b076a7e1-42f1-4869-9a2c-00e91a5364ab-kube-api-access-gwxpb" pod "b076a7e1-42f1-4869-9a2c-00e91a5364ab" (UID: "b076a7e1-42f1-4869-9a2c-00e91a5364ab"). InnerVolumeSpecName "kube-api-access-gwxpb". PluginName "kubernetes.io/projected", VolumeGIDValue ""
+  I0318 23:24:11.647035     102 reconciler_common.go:299] "Volume detached for volume \"kube-api-access-gwxpb\" (UniqueName: \"kubernetes.io/projected/b076a7e1-42f1-4869-9a2c-00e91a5364ab-kube-api-access-gwxpb\") on node \"d8b97bd2d749\" DevicePath \"\""
+  I0318 23:24:11.647081     102 reconciler_common.go:299] "Volume detached for volume \"script\" (UniqueName: \"kubernetes.io/configmap/b076a7e1-42f1-4869-9a2c-00e91a5364ab-script\") on node \"d8b97bd2d749\" DevicePath \"\""
+  I0318 23:24:11.647091     102 reconciler_common.go:299] "Volume detached for volume \"data\" (UniqueName: \"kubernetes.io/host-path/b076a7e1-42f1-4869-9a2c-00e91a5364ab-data\") on node \"d8b97bd2d749\" DevicePath \"\""
+  I0318 23:24:11.901093     102 pod_container_deletor.go:80] "Container not found in pod's containers" containerID="9ab2dc460cf66f81b5913f6bc5b1f81e30c3120a141261170bfcb1109b3703e9"
+  E0318 23:24:11.906852     102 status_manager.go:1045] "Failed to get status for pod" err="pods \"helper-pod-create-pvc-450ac567-d435-4249-a367-fe1367890d28\" is forbidden: User \"system:node:d8b97bd2d749\" cannot get resource \"pods\" in API group \"\" in the namespace \"kube-system\": no relationship found between node 'd8b97bd2d749' and this object" podUID="b076a7e1-42f1-4869-9a2c-00e91a5364ab" pod="kube-system/helper-pod-create-pvc-450ac567-d435-4249-a367-fe1367890d28"
+  I0318 23:24:12.371808     102 kubelet_volumes.go:161] "Cleaned up orphaned pod volumes dir" podUID="b076a7e1-42f1-4869-9a2c-00e91a5364ab" path="/var/lib/kubelet/pods/b076a7e1-42f1-4869-9a2c-00e91a5364ab/volumes"
+  I0318 23:24:13.057809     102 reconciler_common.go:251] "operationExecutor.VerifyControllerAttachedVolume started for volume \"kube-api-access-6zlcb\" (UniqueName: \"kubernetes.io/projected/3daa1c58-a425-40ab-a61d-52f1b458d8a3-kube-api-access-6zlcb\") pod \"openshell-0\" (UID: \"3daa1c58-a425-40ab-a61d-52f1b458d8a3\") " pod="openshell/openshell-0"
+  I0318 23:24:13.057969     102 reconciler_common.go:251] "operationExecutor.VerifyControllerAttachedVolume started for volume \"pvc-450ac567-d435-4249-a367-fe1367890d28\" (UniqueName: \"kubernetes.io/local-volume/pvc-450ac567-d435-4249-a367-fe1367890d28\") pod \"openshell-0\" (UID: \"3daa1c58-a425-40ab-a61d-52f1b458d8a3\") " pod="openshell/openshell-0"
+  I0318 23:24:13.058010     102 reconciler_common.go:251] "operationExecutor.VerifyControllerAttachedVolume started for volume \"tls-cert\" (UniqueName: \"kubernetes.io/secret/3daa1c58-a425-40ab-a61d-52f1b458d8a3-tls-cert\") pod \"openshell-0\" (UID: \"3daa1c58-a425-40ab-a61d-52f1b458d8a3\") " pod="openshell/openshell-0"
+  I0318 23:24:13.058227     102 reconciler_common.go:251] "operationExecutor.VerifyControllerAttachedVolume started for volume \"tls-client-ca\" (UniqueName: \"kubernetes.io/secret/3daa1c58-a425-40ab-a61d-52f1b458d8a3-tls-client-ca\") pod \"openshell-0\" (UID: \"3daa1c58-a425-40ab-a61d-52f1b458d8a3\") " pod="openshell/openshell-0"
+  I0318 23:24:13.168236     102 operation_generator.go:557] "MountVolume.MountDevice succeeded for volume \"pvc-450ac567-d435-4249-a367-fe1367890d28\" (UniqueName: \"kubernetes.io/local-volume/pvc-450ac567-d435-4249-a367-fe1367890d28\") pod \"openshell-0\" (UID: \"3daa1c58-a425-40ab-a61d-52f1b458d8a3\") device mount path \"/var/lib/rancher/k3s/storage/pvc-450ac567-d435-4249-a367-fe1367890d28_openshell_openshell-data-openshell-0\"" pod="openshell/openshell-0"
+  I0318 23:24:50.141140     102 pod_startup_latency_tracker.go:108] "Observed pod startup duration" pod="openshell/openshell-0" podStartSLOduration=22.59623892 podStartE2EDuration="56.141113887s" podCreationTimestamp="2026-03-18 23:23:54 +0000 UTC" firstStartedPulling="2026-03-18 23:24:15.52948382 +0000 UTC m=+140.860105563" lastFinishedPulling="2026-03-18 23:24:49.066399372 +0000 UTC m=+174.404980530" observedRunningTime="2026-03-18 23:24:50.139797609 +0000 UTC m=+175.478378867" watchObservedRunningTime="2026-03-18 23:24:50.141113887 +0000 UTC m=+175.479695145"
+Gateway nemoclaw ready.
+
+[1m[32m✓[39m[0m Gateway ready
+
+  [1mName:[0m nemoclaw
+  [1mEndpoint:[0m https://127.0.0.1:8080
+
+[1m[32m✓[39m[0m Active gateway set to 'nemoclaw'
+  ✓ Gateway is healthy
+
+  [3/7] Creating sandbox
+  ──────────────────────────────────────────────────
+  [non-interactive] Sandbox name (lowercase, numbers, hyphens) [my-assistant]: → my-assistant
+  Creating sandbox 'my-assistant' (this takes a few minutes on first run)...
+Building image [36mopenshell/sandbox-from:1773876381[39m from /tmp/nemoclaw-build-462yiX/Dockerfile
+  [2mContext:[0m /tmp/nemoclaw-build-462yiX
+  [2mGateway:[0m nemoclaw
+
+  Building image openshell/sandbox-from:1773876381 from /tmp/nemoclaw-build-462yiX/Dockerfile
+  Step 1/22 : FROM node:22-slim
+   ---> 4f77a690f2f8
+  Step 2/22 : ENV DEBIAN_FRONTEND=noninteractive
+   ---> Using cache
+   ---> e96285f25ba9
+  Step 3/22 : RUN apt-get update && apt-get install -y --no-install-recommends         python3 python3-pip python3-venv         curl git ca-certificates         iproute2     && rm -rf /var/lib/apt/lists/*
+   ---> Using cache
+   ---> 5423fc127321
+  Step 4/22 : RUN groupadd -r sandbox && useradd -r -g sandbox -d /sandbox -s /bin/bash sandbox     && mkdir -p /sandbox/.openclaw /sandbox/.nemoclaw     && chown -R sandbox:sandbox /sandbox
+   ---> Using cache
+   ---> 3c901a5773df
+  Step 5/22 : RUN npm install -g openclaw@2026.3.11
+   ---> Using cache
+   ---> 077411bb33df
+  Step 6/22 : RUN pip3 install --break-system-packages pyyaml
+   ---> Using cache
+   ---> eba3fe5eb89d
+  Step 7/22 : COPY nemoclaw/dist/ /opt/nemoclaw/dist/
+   ---> Using cache
+   ---> 40a06e98ef66
+  Step 8/22 : COPY nemoclaw/openclaw.plugin.json /opt/nemoclaw/
+   ---> Using cache
+   ---> 69a9b118c99e
+  Step 9/22 : COPY nemoclaw/package.json /opt/nemoclaw/
+   ---> Using cache
+   ---> 7dc110a1c0f5
+  Step 10/22 : COPY nemoclaw-blueprint/ /opt/nemoclaw-blueprint/
+   ---> Using cache
+   ---> 4ab0ec19b9f8
+  Step 11/22 : WORKDIR /opt/nemoclaw
+   ---> Running in e5f1afa80a9b
+   ---> Removed intermediate container e5f1afa80a9b
+   ---> 990561cea36c
+  Step 12/22 : RUN npm install --omit=dev
+   ---> Running in a2ddf86c8539
+  
+added 9 packages, and audited 10 packages in 47s
+
+1 package is looking for funding
+  run `npm fund` for details
+  
+found 0 vulnerabilities
+   ---> Removed intermediate container a2ddf86c8539
+   ---> 63e8fe2a8e3c
+  Step 13/22 : RUN mkdir -p /sandbox/.nemoclaw/blueprints/0.1.0     && cp -r /opt/nemoclaw-blueprint/* /sandbox/.nemoclaw/blueprints/0.1.0/
+   ---> Running in c75c5ee5c035
+   ---> Removed intermediate container c75c5ee5c035
+   ---> 4ea0faad6ef3
+  Step 14/22 : COPY scripts/nemoclaw-start.sh /usr/local/bin/nemoclaw-start
+   ---> f57d990e1af2
+  Step 15/22 : RUN chmod +x /usr/local/bin/nemoclaw-start
+   ---> Running in c9a0653c5129
+   ---> Removed intermediate container c9a0653c5129
+   ---> 88009faddea4
+  Step 16/22 : WORKDIR /sandbox
+   ---> Running in 6f1f38c53471
+   ---> Removed intermediate container 6f1f38c53471
+   ---> 2e1917704268
+  Step 17/22 : USER sandbox
+   ---> Running in 00e49d7f0d3d
+   ---> Removed intermediate container 00e49d7f0d3d
+   ---> 7fc1bca41b13
+  Step 18/22 : RUN mkdir -p /sandbox/.openclaw/agents/main/agent     && chmod 700 /sandbox/.openclaw
+   ---> Running in 140fa973cb4d
+   ---> Removed intermediate container 140fa973cb4d
+   ---> 09ad6f158caa
+  Step 19/22 : RUN python3 -c "import json, os; config = {     'agents': {'defaults': {'model': {'primary': 'nvidia/nemotron-3-super-120b-a12b'}}},     'models': {'mode': 'merge', 'providers': {'nvidia': {         'baseUrl': 'https://inference.local/v1',         'apiKey': 'openshell-managed',         'api': 'openai-completions',         'models': [{'id': 'nemotron-3-super-120b-a12b', 'name': 'NVIDIA Nemotron 3 Super 120B', 'reasoning': False, 'input': ['text'], 'cost': {'input': 0, 'output': 0, 'cacheRead': 0, 'cacheWrite': 0}, 'contextWindow': 131072, 'maxTokens': 4096}]     }}} }; path = os.path.expanduser('~/.openclaw/openclaw.json'); json.dump(config, open(path, 'w'), indent=2); os.chmod(path, 0o600)"
+   ---> Running in 5046d7159b98
+   ---> Removed intermediate container 5046d7159b98
+   ---> 1b72762182eb
+  Step 20/22 : RUN openclaw doctor --fix > /dev/null 2>&1 || true     && openclaw plugins install /opt/nemoclaw > /dev/null 2>&1 || true
+   ---> Running in a2f50c584ea1
+   ---> Removed intermediate container a2f50c584ea1
+   ---> fbd774b1c342
+  Step 21/22 : ENTRYPOINT ["/bin/bash"]
+   ---> Running in c572e21fcc95
+   ---> Removed intermediate container c572e21fcc95
+   ---> 27c0a76ecd94
+  Step 22/22 : CMD []
+   ---> Running in 73c2910c904c
+   ---> Removed intermediate container 73c2910c904c
+   ---> aea7a996a50e
+  Successfully built aea7a996a50e
+  Successfully tagged openshell/sandbox-from:1773876381
+  Built image openshell/sandbox-from:1773876381
+  Pushing image openshell/sandbox-from:1773876381 into gateway "nemoclaw"
+  [progress] Exported 1174 MiB
+bash: line 1:  4013 Killed                  openshell sandbox create --from "/tmp/nemoclaw-build-462yiX/Dockerfile" --name "my-assistant" --policy "/app/nemoclaw-blueprint/policies/openclaw-sandbox.yaml" -- env CHAT_UI_URL=http://127.0.0.1:18789 NVIDIA_API_KEY=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 nemoclaw-start 2>&1
+      4014 Done                    | awk '/Sandbox allocated/{if(!seen){print;seen=1}next}1'
+  Command failed (exit 137): set -o pipefail; openshell sandbox create --from "/tmp/nemoclaw-build-462yiX/Doc

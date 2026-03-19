@@ -4,13 +4,30 @@
 const { execSync, spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 
 const ROOT = path.resolve(__dirname, "..", "..");
 const SCRIPTS = path.join(ROOT, "scripts");
 
+// Detect bash executable on Windows
+let bashExe = "bash";
+if (os.platform() === "win32") {
+  const commonBashPaths = [
+    "C:\\Program Files\\Git\\bin\\bash.exe",
+    "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    path.join(process.env.USERPROFILE || "", "AppData\\Local\\Programs\\Git\\bin\\bash.exe"),
+  ];
+  for (const p of commonBashPaths) {
+    if (fs.existsSync(p)) {
+      bashExe = p;
+      break;
+    }
+  }
+}
+
 // Auto-detect Colima Docker socket (legacy ~/.colima or XDG ~/.config/colima)
 if (!process.env.DOCKER_HOST) {
-  const home = process.env.HOME || "/tmp";
+  const home = process.env.HOME || process.env.USERPROFILE || "/tmp";
   const candidates = [
     path.join(home, ".colima/default/docker.sock"),
     path.join(home, ".config/colima/default/docker.sock"),
@@ -24,7 +41,7 @@ if (!process.env.DOCKER_HOST) {
 }
 
 function run(cmd, opts = {}) {
-  const result = spawnSync("bash", ["-c", cmd], {
+  const result = spawnSync(bashExe, ["-c", cmd], {
     stdio: "inherit",
     cwd: ROOT,
     env: { ...process.env, ...opts.env },
@@ -39,7 +56,9 @@ function run(cmd, opts = {}) {
 
 function runCapture(cmd, opts = {}) {
   try {
-    return execSync(cmd, {
+    // On Windows, execSync uses cmd.exe, but we want bash -c for consistency
+    const fullCmd = os.platform() === "win32" ? `"${bashExe}" -c "${cmd.replace(/"/g, '\\"')}"` : cmd;
+    return execSync(fullCmd, {
       encoding: "utf-8",
       cwd: ROOT,
       env: { ...process.env, ...opts.env },

@@ -3,6 +3,7 @@
 
 const { execSync } = require("child_process");
 const fs = require("fs");
+const path = require("path");
 
 /**
  * Resolve the openshell binary path.
@@ -17,7 +18,23 @@ const fs = require("fs");
  * @returns {string|null} Absolute path to openshell, or null if not found
  */
 function resolveOpenshell(opts = {}) {
+  const isWin = process.platform === "win32";
   const home = opts.home ?? process.env.HOME;
+
+  if (isWin) {
+    // On Windows, we expect to run the Linux binary via WSL
+    try {
+      const wslCheck = execSync("wsl openshell status", { encoding: "utf-8", stdio: "pipe" });
+      return "wsl openshell";
+    } catch {
+      // Try local path via WSL
+      const localPath = path.join(process.cwd(), "openshell").replace(/\\/g, "/").replace(/^([A-Z]):/, (m, drive) => `/mnt/${drive.toLowerCase()}`);
+      try {
+        execSync(`wsl "${localPath}" status`, { encoding: "utf-8", stdio: "pipe" });
+        return `wsl "${localPath}"`;
+      } catch {}
+    }
+  }
 
   // Step 1: command -v
   if (opts.commandVResult === undefined) {

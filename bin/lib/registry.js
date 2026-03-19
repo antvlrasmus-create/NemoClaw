@@ -6,7 +6,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const REGISTRY_FILE = path.join(process.env.HOME || "/tmp", ".nemoclaw", "sandboxes.json");
+const REGISTRY_FILE = path.join(process.env.HOME || process.env.USERPROFILE || "/tmp", ".nemoclaw", "sandboxes.json");
 
 function load() {
   try {

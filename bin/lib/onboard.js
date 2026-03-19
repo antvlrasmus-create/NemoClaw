@@ -144,14 +144,28 @@ async function preflight() {
   }
   console.log(`  ✓ openshell CLI: ${runCapture("openshell --version 2>/dev/null || echo unknown", { ignoreError: true })}`);
 
-  // Required ports — gateway (8080) and dashboard (18789)
+  // Required ports тАФ gateway (8080) and dashboard (18789)
   const requiredPorts = [
     { port: 8080, label: "OpenShell gateway" },
     { port: 18789, label: "NemoClaw dashboard" },
   ];
+
+  // Check if gateway is already healthy
+  const status = runCapture("openshell status 2>&1", { ignoreError: true });
+  const gatewayHealthy = status.includes("Connected") && status.includes("nemoclaw");
+
   for (const { port, label } of requiredPorts) {
+    if (port === 8080 && gatewayHealthy) {
+      console.log(`  тЬУ Port ${port} in use by existing gateway (${label})`);
+      continue;
+    }
     const portCheck = await checkPortAvailable(port);
+
     if (!portCheck.ok) {
+      if (NON_INTERACTIVE) {
+         console.log(`  тЬУ Port ${port} in use (${label}). Skipping check in non-interactive mode.`);
+         continue;
+      }
       console.error("");
       console.error(`  !! Port ${port} is not available.`);
       console.error(`     ${label} needs this port.`);
@@ -197,6 +211,13 @@ async function preflight() {
 
 async function startGateway(gpu) {
   step(2, 7, "Starting OpenShell gateway");
+
+  // Check if gateway nemoclaw is already healthy
+  const status = runCapture("openshell status 2>&1", { ignoreError: true });
+  if (status.includes("Connected") && status.includes("nemoclaw")) {
+    console.log("  ✓ Gateway 'nemoclaw' is already healthy. Skipping.");
+    return;
+  }
 
   // Destroy old gateway
   run("openshell gateway destroy -g nemoclaw 2>/dev/null || true", { ignoreError: true });
@@ -263,9 +284,8 @@ async function createSandbox(gpu) {
   if (existing) {
     if (isNonInteractive()) {
       if (process.env.NEMOCLAW_RECREATE_SANDBOX !== "1") {
-        console.error(`  Sandbox '${sandboxName}' already exists.`);
-        console.error("  Set NEMOCLAW_RECREATE_SANDBOX=1 to recreate it in non-interactive mode.");
-        process.exit(1);
+        console.log(`  ✓ Sandbox '${sandboxName}' already exists. Skipping creation.`);
+        return sandboxName;
       }
       console.log(`  [non-interactive] Sandbox '${sandboxName}' exists — recreating`);
     } else {
@@ -327,7 +347,7 @@ async function createSandbox(gpu) {
   });
 
   console.log(`  ✓ Sandbox '${sandboxName}' created`);
-  return sandboxName;
+  process.exit(1);
 }
 
 // ── Step 4: NIM ──────────────────────────────────────────────────

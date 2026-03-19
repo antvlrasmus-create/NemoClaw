@@ -53,7 +53,7 @@ function getPresetEndpoints(content) {
  * `preset:` metadata header.
  */
 function extractPresetEntries(presetContent) {
-  const npMatch = presetContent.match(/^network_policies:\n([\s\S]*)$/m);
+  const npMatch = presetContent.match(/^network_policies:\r?\n([\s\S]*)$/m);
   if (!npMatch) return null;
   return npMatch[1].trimEnd();
 }

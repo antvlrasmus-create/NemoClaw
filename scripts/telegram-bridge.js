@@ -92,7 +92,10 @@ async function sendTyping(chatId) {
 
 function runAgentInSandbox(message, sessionId) {
   return new Promise((resolve) => {
-    const sshConfig = execSync(`"${OPENSHELL}" sandbox ssh-config "${SANDBOX}"`, { encoding: "utf-8" });
+    const sshConfig = execSync(`"${OPENSHELL}" sandbox ssh-config "${SANDBOX}"`, {
+      encoding: "utf-8",
+      env: process.env,
+    });
 
     // Write temp ssh config
     const confPath = `/tmp/nemoclaw-tg-ssh-${sessionId}.conf`;
