@@ -1,6 +1,6 @@
 services:
   nemoclaw-controller:
-    image: node:22-slim
+    image: node:22-bookworm
     ports:
       - "18789:18789"
       - "18788:18788"
@@ -10,7 +10,8 @@ services:
     working_dir: /app
     dns:
       - 8.8.8.8
-    command: bash -c "export SANDBOX_NAME=my-assistant && node bin/nemoclaw.js start && tail -f /dev/null"
+    command: bash -c "node bin/nemoclaw.js start && tail -f /dev/null"
     environment:
-      - TELEGRAM_BOT_TOKEN
-      - NVIDIA_API_KEY
+      - TELEGRAM_BOT_TOKEN=8637805551:AAGdhOIhSodK1nx3lluUtT8luvU4RYq-tH8
+      - NVIDIA_API_KEY=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
+      - NEMOCLAW_SANDBOX_NAME=my-assistant

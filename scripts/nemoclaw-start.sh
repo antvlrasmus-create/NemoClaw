@@ -167,18 +167,18 @@ PYAUTOPAIR
 }
 
 echo 'Setting up NemoClaw...'
-openclaw doctor --fix > /dev/null 2>&1 || true
-openclaw models set nvidia/nemotron-3-super-120b-a12b > /dev/null 2>&1 || true
+npx npx openclaw doctor --fix > /dev/null 2>&1 || true
+npx npx openclaw models set nvidia/nemotron-3-super-120b-a12b > /dev/null 2>&1 || true
 write_auth_profile
 export CHAT_UI_URL PUBLIC_PORT
 fix_openclaw_config
-openclaw plugins install /opt/nemoclaw > /dev/null 2>&1 || true
+echo Skipping plugins...
 
 if [ ${#NEMOCLAW_CMD[@]} -gt 0 ]; then
   exec "${NEMOCLAW_CMD[@]}"
 fi
 
-nohup openclaw gateway run --bind 0.0.0.0 --port "${PUBLIC_PORT}" > /tmp/gateway.log 2>&1 &
-echo "[gateway] openclaw gateway launched (pid $!)"
+nohup npx npx openclaw gateway run --bind 0.0.0.0 --port "${PUBLIC_PORT}" > /tmp/gateway.log 2>&1 &
+echo "[gateway] npx npx openclaw gateway launched (pid $!)"
 start_auto_pair
 print_dashboard_urls
