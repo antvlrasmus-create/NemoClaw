@@ -13,7 +13,7 @@ const registry = require("./registry");
 const nim = require("./nim");
 const policies = require("./policies");
 const { checkPortAvailable } = require("./preflight");
-const HOST_GATEWAY_URL = "https://openshell:8080";
+const HOST_GATEWAY_URL = "http://host.docker.internal:8080";
 const EXPERIMENTAL = process.env.NEMOCLAW_EXPERIMENTAL === "1";
 
 // Non-interactive mode: set by --non-interactive flag or env var.

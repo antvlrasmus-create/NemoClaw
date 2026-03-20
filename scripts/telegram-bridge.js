@@ -92,54 +92,36 @@ async function sendTyping(chatId) {
 
 function runAgentInSandbox(message, sessionId) {
   return new Promise((resolve) => {
-    const sshConfig = execSync(`"${OPENSHELL}" sandbox ssh-config "${SANDBOX}"`, {
-      encoding: "utf-8",
-      env: process.env,
-    });
-
-    // Write temp ssh config
-    const confPath = `/tmp/nemoclaw-tg-ssh-${sessionId}.conf`;
-    require("fs").writeFileSync(confPath, sshConfig);
-
     const escaped = message.replace(/'/g, "'\\''");
-    const cmd = `export NVIDIA_API_KEY='${API_KEY}' && nemoclaw-start openclaw agent --agent main --local -m '${escaped}' --session-id 'tg-${sessionId}'`;
+    const cmd = `export NVIDIA_API_KEY='${API_KEY}' && cd /app && node bin/nemoclaw.js start-agent --message '${escaped}' --session-id 'tg-${sessionId}' 2>&1`;
 
-    const proc = spawn("ssh", ["-T", "-F", confPath, `openshell-${SANDBOX}`, cmd], {
+    try {
+      execSync(`docker inspect -f '{{.State.Running}}' "${SANDBOX}"`, { stdio: "ignore" });
+    } catch {
+      console.log(`[bridge] Sandbox '${SANDBOX}' not running. Starting...`);
+      execSync(`docker run -d --name "${SANDBOX}" -v "${process.cwd()}:/app" -w /app node:22-slim sleep infinity`, { stdio: "inherit" });
+    }
+
+    const proc = spawn("docker", ["exec", SANDBOX, "bash", "-c", cmd], {
       timeout: 120000,
+      env: process.env,
       stdio: ["ignore", "pipe", "pipe"],
     });
 
     let stdout = "";
     let stderr = "";
-
     proc.stdout.on("data", (d) => (stdout += d.toString()));
     proc.stderr.on("data", (d) => (stderr += d.toString()));
 
     proc.on("close", (code) => {
-      try { require("fs").unlinkSync(confPath); } catch {}
-
-      // Extract the actual agent response — skip setup lines
-      const lines = stdout.split("\n");
-      const responseLines = lines.filter(
-        (l) =>
-          !l.startsWith("Setting up NemoClaw") &&
-          !l.startsWith("[plugins]") &&
-          !l.startsWith("(node:") &&
-          !l.includes("NemoClaw ready") &&
-          !l.includes("NemoClaw registered") &&
-          !l.includes("openclaw agent") &&
-          !l.includes("┌─") &&
-          !l.includes("│ ") &&
-          !l.includes("└─") &&
-          l.trim() !== "",
-      );
-
-      const response = responseLines.join("\n").trim();
+      const response = stdout.split("\n")
+        .filter(l => !l.startsWith("[dotenv]") && !l.startsWith("[services]") && l.trim() !== "")
+        .join("\n").trim();
 
       if (response) {
         resolve(response);
       } else if (code !== 0) {
-        resolve(`Agent exited with code ${code}. ${stderr.trim().slice(0, 500)}`);
+        resolve(`Agent error (${code}): ${stderr.trim().slice(0, 500)}`);
       } else {
         resolve("(no response)");
       }

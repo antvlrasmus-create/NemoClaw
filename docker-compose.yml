@@ -1,26 +1,16 @@
-version: '3.8'
-
 services:
   nemoclaw-controller:
     image: node:22-slim
-    container_name: nemoclaw-controller
     ports:
       - "18789:18789"
       - "18788:18788"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - .:/app
-      - nemoclaw-data:/root/.nemoclaw
-      - openshell-data:/root/.openshell
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "openshell:host-gateway"
     working_dir: /app
-    command: sleep infinity
+    dns:
+      - 8.8.8.8
+    command: bash -c "export SANDBOX_NAME=my-assistant && node bin/nemoclaw.js start && tail -f /dev/null"
     environment:
-      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
-    restart: unless-stopped
-
-volumes:
-  nemoclaw-data:
-  openshell-data:
+      - TELEGRAM_BOT_TOKEN
+      - NVIDIA_API_KEY

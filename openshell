@@ -1,1 +1,10 @@
-Not Found
+#!/bin/bash
+export PATH="/c/Windows/System32:$PATH"
+REL_PATH="Users/Nitro Nout/.gemini/nemoclaw/openshell.elf"
+for MNT in /mnt/c /c /mnt/host/c /run/desktop/mnt/host/c; do
+  if /c/Windows/System32/wsl.exe -e ls "$MNT/$REL_PATH" > /dev/null 2>&1; then
+    MSYS_NO_PATHCONV=1 /c/Windows/System32/wsl.exe -e "$MNT/$REL_PATH" "$@"
+    exit $?
+  fi
+done
+exit 1
